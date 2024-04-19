@@ -1,0 +1,254 @@
+---
+title: "Encrypting a single file"
+author: "John C. Nash"
+date: '`r Sys.Date()`'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Abstract
+
+This document gives some suggestions on how to encrypt, decrypt and view a single
+(text) file in different computing environments.
+
+# Introduction
+
+Encryption is a key aspect of modern computing and communications. In this article,
+we will focus on the encryption of a single **file** of data, normally assumed
+to be ordinary text, as well as its decryption and viewing. We will usually 
+restrict our attention to **symmetric** encryption, where the same **password**
+or **passphrase** is used to encrypt and decrypt the file. However, there are
+a number of important tools that use **passkeys** and may use asymmetric or
+public-private key pairs.
+
+Note that encryption can be applied to whole storage devices, volumes, directories
+or streams. Here we will not explore those possibilities, even if our tools could
+be used for such applications.
+
+# Required tools
+
+To simplify our discussion, we will give our tools the *generic* names
+
+- **ecrypt**, a program that encrypts a file from FILE to FILE.CCC
+- **dcrypt**, a program that decrypts a file from FILE.CCC to FILE
+- **vcrypt**, a program that displays FILE.CCC or part thereof for human reading,
+  hopefully removing all readable traces of the decrypted information as it exits.
+  This facility is not available for all encryption tools, so the user may have
+  to take measures to avoid leaving unencrypted information accessible to those
+  not authorized to view it.
+  
+# Some possible tools
+
+## ccrypt
+
+**ccrypt** (\url{http://ccrypt.sourceforge.net/}) is intended for file encryption.
+I happen to be acquainted with its author, Peter Seligman of Dalhousie University.
+It is available for most platforms. 
+
+ - ecrypt becomes
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ccrypt FILE
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; and outputs FILE.cpt
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The password must be entered twice, though there are options to include\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; it on the command line, but such options are discouraged for reasons of\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; security.
+ 
+ - dcrypt becomes (the user is prompted for the password)
+         
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ccrypt -d FILE.cpt
+      
+ - vcrypt becomes
+ 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ccat FILE.cpt
+
+All the above are executed in a terminal (or command) window on Linux, Windows
+and (we presume) Macintosh. Note the **qccrypt** GUI wrapper for Linux and
+Windows.
+
+### Linux
+
+
+**ecrypt-ccrypt.sh**
+
+
+```{r file="enctools/ecrypt-ccrypt.sh", echo=TRUE, eval=FALSE}
+```
+
+**dcrypt-ccrypt.sh**
+
+
+```{r file="enctools/dcrypt-ccrypt.sh", echo=TRUE, eval=FALSE}
+```
+
+**vcrypt-ccrypt.sh**
+
+
+```{r file="enctools/vcrypt-ccrypt.sh", echo=TRUE, eval=FALSE}
+```
+
+There are variants of the GUI wrapper **qccrypt** for several Linux distros as
+well as source code at http://qccrypt.free.fr/download.html .
+
+### Windows
+
+Note that these tools are intended to be run inside a command terminal screen.
+However, there are 32-bit installable and portable Windows packages at, respectively,
+http://qccrypt.free.fr/download/qccrypt-0.9.1.msi and 
+http://qccrypt.free.fr/download/qccrypt-0.9.1-win32.zip .
+
+**ecrypt-ccrypt.bat**
+
+```{r file="enctools/ecrypt-ccrypt.bat", echo=TRUE, eval=FALSE}
+```
+
+**dcrypt-ccrypt.bat**
+
+
+```{r file="enctools/dcrypt-ccrypt.bat", echo=TRUE, eval=FALSE}
+```
+
+**vcrypt-ccrypt.bat**
+
+
+```{r file="enctools/vcrypt-ccrypt.bat", echo=TRUE, eval=FALSE}
+```
+
+### Android
+
+There is a tarball of an Android program 
+
+https://ccrypt.sourceforge.net/download/1.10/ccrypt-1.10.android.tar.gz
+
+but I have NOT determined how to install and use this.
+
+## 7zip
+
+**7zip** (\url{https://7-zip.org/}) is free and open source software intended 
+primarily for compressed archiving of collections of files. However, it includes
+strong AES-256 encryption in 7z and ZIP formats. Moreover, it is available for
+almost all platforms, including Android. However, vcrypt seems unavailable in a 
+form that is "view only".
+
+### Linux
+
+**ecrypt-7z.sh**
+
+
+```{r file="enctools/ecrypt-7z.sh", echo=TRUE, eval=FALSE}
+```
+
+**dcrypt-7z.sh**
+
+
+```{r file="enctools/dcrypt-7z.sh", echo=TRUE, eval=FALSE}
+```
+
+### Windows
+
+
+**ecrypt-7z.bat**
+
+
+```{r file="enctools/ecrypt-7z.bat", echo=TRUE, eval=FALSE}
+```
+
+**dcrypt-7z.bat**
+
+```{r file="enctools/dcrypt-7z.bat", echo=TRUE, eval=FALSE}
+```
+
+### Mac ??
+
+### Android
+
+I have found two "apps" on Android that I have verified can unpack password 
+protected zip files using the encryption of the 7z family of software:
+**7zipper** and **Zarchive**. I will NOT provide 
+programs to encrypt and decrypt for Android, as "Android" is actually several
+different operating systems in my opinion, and I find the various "help" postings
+on the Internet and in Youtube never fit my own devices (two tablets and two
+phones, all slightly different). A particular annoyance is that Zarchiver does
+not allow decryption of files on a plug-in SD memory card for some reason. There
+are a number of postings and videos on how to "fix" this, but I did not find
+any worked. If I copied a zip archive to the Internal memory device of my tablet,
+then Zarchiver would decrypt it so a text editor (I used the Jota Text Editor)
+could view the file.
+
+Two particular concerns with mobile phones and tablets is that the decrypted
+(i.e., plaintext) document is written to the storage of the device. This means
+
+- for security, it must be properly erased. This means over-writing the 
+storage after the control entry has been modified, as the actual data will 
+still be present otherwise;
+
+- with the almost certain network connectivity, it is difficult to be sure that
+external agents cannot view the plaintext material before we can erase it. I
+do not have the expertise to estimate this risk, but it is certainly not
+zero.
+
+
+
+## gpg
+
+ - ecrypt becomes
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gpg --symmetric FILE
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; and outputs FILE.gpg
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The password must be entered twice, though there are options to include\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; it on the command line, but such options are discouraged for reasons of\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; security.
+ 
+ - dcrypt becomes (the user is prompted for the password)
+         
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gpg --decrypt FILE.gpg
+      
+ - There does not appear to be a reasonable option with gpg for vcrypt 
+ 
+
+
+### Linux
+
+
+**ecrypt-gpg.sh**
+
+
+```{r file="enctools/ecrypt-gpg.sh", echo=TRUE, eval=FALSE}
+```
+
+**dcrypt-gpg.sh**
+
+```{r file="enctools/dcrypt-gpg.sh", echo=TRUE, eval=FALSE}
+```
+
+### Windows
+
+Note that these tools are intended to be run inside a command terminal screen.
+
+**ecrypt-gpg.bat**
+
+```{r file="enctools/ecrypt-gpg.bat", echo=TRUE, eval=FALSE}
+```
+
+**dcrypt-gpg.bat**
+
+
+```{r file="enctools/dcrypt-gpg.bat", echo=TRUE, eval=FALSE}
+```
+
+## Strategies for use
+
+The fact that different platforms have generally different modes of use forces 
+consideration of which tools to use for file encryption in a particular situation.
+Some of the questions a user must answer are as follows:
+
+- Will files encrypted by a particular tool require decryption on a different
+platform. This is particularly important, for example, in the case of ccrypt,
+since it is not reasonably available on Android (and we do not know about
+iPhone)
