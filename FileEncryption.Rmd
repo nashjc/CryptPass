@@ -195,7 +195,7 @@ zero.
 
 ## gpg
 
- - ecrypt becomes
+ - the command for ecrypt becomes
  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gpg --symmetric FILE
  
@@ -205,7 +205,7 @@ zero.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; it on the command line, but such options are discouraged for reasons of\
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; security.
  
- - dcrypt becomes (the user is prompted for the password)
+ - the command for dcrypt becomes (the user is prompted for the password)
          
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gpg --decrypt FILE.gpg
       
